@@ -141,3 +141,5 @@ AUTH_USER_MODEL = 'core.User'
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True
 
+#CSRF
+CSRF_TRUSTED_ORIGINS = ['https://pyhelp.ru']
