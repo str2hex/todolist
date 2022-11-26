@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+
+  front:
+    image: sermalenk/skypro-front:lesson-35  # образ https://hub.docker.com/r/sermalenk/skypro-front/tags?page=1&ordering=last_updated
+    ports:
+      - 80:80   # проброс портов
+    depends_on: # зависимость от api
+      - api
+
+  api:
+    image: str2hex/backend:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    depends_on: # зависимость от контейнера pg и migrations
+      postgres: # наш контйенер с базой данных postgres
+        condition: service_healthy # проверяем что контейнер запустился
+      migrations: # наш контйенер с применяемыми миграциями
+        condition: service_completed_successfully # проверяем что контейнер успешно запустился и завершил работу
+    ports: # пробарсываем порты
+      - 8000:8000
+    volumes: # указываем папку хранения базы данных
+      - ./.env:/web/www/.env # волюм с конфигурацией.
+
+  migrations:
+    image: str2hex/backend:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes: # волюм с конфигурацией
+      - ./.env:/web/www/.env
+    command: bash -c "python3 manage.py migrate" # команда для применения миграций
+
+  postgres:
+    image: postgres:12.4-alpine  # образ
+    volumes: # волюм для данных БД
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment: # переменные окружения для автоматического создания БД, пользователя и пароля
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_NAME
+    healthcheck: #healthcheck для БД
+      test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

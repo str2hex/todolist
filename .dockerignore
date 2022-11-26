@@ -1,0 +1,6 @@
+.venv
+.gitignore
+db.sqlite3
+poetry.lock
+pyproject.toml
+docker-compose.ylm
