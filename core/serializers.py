@@ -26,6 +26,8 @@ class CreateUserSerializers(serializers.ModelSerializer):
         if password != password_repeat:
             raise serializers.ValidationError("Введеные пароли не совпадают")
 
+        return attrs
+
     def create(self, validated_data):
         password = validated_data.get('password')
         validated_data['password'] = make_password(password)
