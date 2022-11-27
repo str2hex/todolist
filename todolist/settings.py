@@ -77,8 +77,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-
             ],
         },
     },
@@ -154,5 +152,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_VK_APP_KEY = env('SOCIAL_AUTH_VK_APP_KEY')
-SOCIAL_AUTH_VK_APP_SECRET = env('SOCIAL_AUTH_VK_APP_SECRET')
+SOCIAL_AUTH_VK_OAUTH2_KEY = env('SOCIAL_AUTH_VK_OAUTH2_KEY')
+SOCIAL_AUTH_VK_OAUTH2_SECRET = env('SOCIAL_AUTH_VK_OAUTH2_SECRET')
+LOGIN_REDIRECT_URL = '/categories'
+

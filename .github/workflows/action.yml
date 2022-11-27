@@ -22,8 +22,9 @@ jobs:
       DB_HOST: ${{ secrets.DB_HOST }}
       DB_PORT: ${{ secrets.DB_PORT }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      SOCIAL_AUTH_VK_APP_KEY: ${{ secrets.SOCIAL_AUTH_VK_APP_KEY }}
-      SOCIAL_AUTH_VK_APP_SECRET: ${{ secrets.SOCIAL_AUTH_VK_APP_SECRET }}
+      SOCIAL_AUTH_VK_OAUTH2_KEY: ${{ secrets.SOCIAL_AUTH_VK_OAUTH2_KEY }}
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: ${{ secrets.SOCIAL_AUTH_VK_OAUTH2_SECRET }}
+
     steps:
       - name: clone code
         uses: actions/checkout@v2
