@@ -52,4 +52,4 @@ class LoginUserSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = USER_MODEL
-        fields = ['username', 'password']
+        fields = '__all__'
