@@ -34,9 +34,6 @@ class ProfileUserView(RetrieveUpdateDestroyAPIView):
     def get_object(self):
         return self.request.user
 
-    def update(self, request, *args, **kwargs):
-        return super().update(self, request, *args, **kwargs)
-
     def delete(self, request, *args, **kwargs):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
