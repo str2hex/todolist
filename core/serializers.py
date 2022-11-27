@@ -52,7 +52,7 @@ class LoginUserSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = USER_MODEL
-        fields = ["id", "username", "first_name", "last_name", "email"]
+        fields = ["id", "username", "first_name", "last_name", "email", "password"]
 
 
 class ProfilesSerializers(serializers.ModelSerializer):
