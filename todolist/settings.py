@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'social_django',
     "corsheaders",
     'core',
 ]
@@ -76,6 +77,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',  # Добавил эту строку
+
             ],
         },
     },
@@ -143,3 +146,14 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 #CSRF
 CSRF_TRUSTED_ORIGINS = ['https://pyhelp.ru']
+
+#VK OAUTH 2
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+SOCIAL_AUTH_VK_OAUTH2_KEY = '51488430'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'oOGDeHKuZipP431Fhwjo'
+LOGIN_REDIRECT_URL = '/categories'
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
