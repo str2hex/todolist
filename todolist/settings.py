@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'oauth2_provider',
     'social_django',
+    'rest_framework_social_oauth2',
     "corsheaders",
     'core',
 ]
@@ -141,19 +143,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Default user model
 AUTH_USER_MODEL = 'core.User'
 
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+    ),
+}
+
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True
 
-#CSRF
+# CSRF
 CSRF_TRUSTED_ORIGINS = ['https://pyhelp.ru']
 
-#VK OAUTH 2
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+# VK OAUTH 2
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 SOCIAL_AUTH_VK_OAUTH2_KEY = env('SOCIAL_AUTH_VK_OAUTH2_KEY')
 SOCIAL_AUTH_VK_OAUTH2_SECRET = env('SOCIAL_AUTH_VK_OAUTH2_SECRET')
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 LOGIN_REDIRECT_URL = '/categories'
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
