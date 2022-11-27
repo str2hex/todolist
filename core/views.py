@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model, login, logout
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, GenericAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -33,7 +34,10 @@ class ProfileUserView(RetrieveUpdateDestroyAPIView):
     def get_object(self):
         return self.request.user
 
+    @ensure_csrf_cookie
+    def update(self, request, *args, **kwargs):
+        return super().update(self, request, *args, **kwargs)
+
     def delete(self, request, *args, **kwargs):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
