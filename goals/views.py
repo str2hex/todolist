@@ -14,8 +14,8 @@ class GoalCategoryCreateView(CreateAPIView):
 
 
 class LimitOffsetPagination(PageNumberPagination):
-    page_size = 3
-    page_size_query_param = 'page_size'
+    page_size = 10
+    page_size_query_param = 'limit'
     max_page_size = 10000
 
 
