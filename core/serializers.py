@@ -84,3 +84,11 @@ class UpdatePasswordUserSerializers(serializers.Serializer):
         instance.password = make_password(validated_data['new_password'])
         instance.save()
         return instance
+
+
+class UserSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    username = serializers.CharField(max_length=100)
+    first_name = serializers.CharField(max_length=100)
+    last_name = serializers.CharField(max_length=100)
+    email = serializers.EmailField()
