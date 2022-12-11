@@ -1,6 +1,6 @@
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -18,23 +18,15 @@ class GoalCategoryCreateView(CreateAPIView):
     permission_classes = [IsAuthenticated, UserAuthenticated]
 
 
-class LimitOffsetPagination(PageNumberPagination):
-    page_size = 10
-    page_size_query_param = 'limit'
-    max_page_size = 10000
-
-
 class GoalCategoryListView(ListAPIView):
     model = GoalCategory
-    permission_classes = [IsAuthenticated, UserAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = GoalCategorySerializer
     pagination_class = LimitOffsetPagination
     filter_backends = [
-        DjangoFilterBackend,
         filters.OrderingFilter,
         filters.SearchFilter,
     ]
-    filterset_fields = ["user"]
     ordering_fields = ["title", "created"]
     ordering = ["title"]
     search_fields = ["title"]
@@ -79,6 +71,7 @@ class GoalListView(ListAPIView):
     ordering_fields = ["priority", "due_date"]
     ordering = ["priority", "due_date"]
     search_fields = ["title"]
+
 
     def get_queryset(self):
         return Goals.objects.filter(user=self.request.user).exclude(status=Goals.Status.archived)
