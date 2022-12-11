@@ -23,6 +23,10 @@ git clone https://github.com/str2hex/todolist.git
 pip install -r requirements.txt
 ```
 
+### config
+```sh
+.enc_ci
+```
 
 ### Start DB
 
