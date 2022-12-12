@@ -8,11 +8,14 @@ class GoalCategory(models.Model):
         verbose_name_plural = "Категории"
 
     id = models.AutoField(primary_key=True)
+    created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated = models.DateTimeField(auto_now=True, verbose_name="Дата последнего обновления")
+    board = models.ForeignKey(
+        "Board", verbose_name="Доска", on_delete=models.PROTECT, related_name="categories"
+    )
     title = models.CharField(verbose_name="Название", max_length=255)
     user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.PROTECT)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
-    created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    updated = models.DateTimeField(auto_now=True, verbose_name="Дата последнего обновления")
 
 
 class Goals(models.Model):
@@ -58,3 +61,47 @@ class GoalComment(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated = models.DateTimeField(auto_now=True, verbose_name="Дата последнего обновления")
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+
+class Board(models.Model):
+    class Meta:
+        verbose_name = "Доска"
+        verbose_name_plural = "Доски"
+
+    title = models.CharField(verbose_name="Название", max_length=255)
+    is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
+    created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated = models.DateTimeField(auto_now=True, verbose_name="Дата последнего обновления")
+
+
+class BoardParticipant(models.Model):
+    class Meta:
+        unique_together = ("board", "user")
+        verbose_name = "Участник"
+        verbose_name_plural = "Участники"
+
+    class Role(models.IntegerChoices):
+        owner = 1, "Владелец"
+        writer = 2, "Редактор"
+        reader = 3, "Читатель"
+
+    board = models.ForeignKey(
+        Board,
+        verbose_name="Доска",
+        on_delete=models.PROTECT,
+        related_name="participants",
+    )
+    user = models.ForeignKey(
+        User,
+        verbose_name="Пользователь",
+        on_delete=models.PROTECT,
+        related_name="participants",
+    )
+    role = models.PositiveSmallIntegerField(
+        verbose_name="Роль", choices=Role.choices, default=Role.owner
+    )
+
+    created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated = models.DateTimeField(auto_now=True, verbose_name="Дата последнего обновления")
+
+
