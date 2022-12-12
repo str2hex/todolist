@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   front:
-    image: sermalenk/skypro-front:lesson-36  # образ https://hub.docker.com/r/sermalenk/skypro-front/tags?page=1&ordering=last_updated
+    image: sermalenk/skypro-front:lesson-37  # образ https://hub.docker.com/r/sermalenk/skypro-front/tags?page=1&ordering=last_updated
     ports:
       - 80:80   # проброс портов
     depends_on: # зависимость от api
