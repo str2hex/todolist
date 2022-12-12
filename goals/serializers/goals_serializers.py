@@ -3,7 +3,7 @@ from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 
 from core.serializers import UserSerializer
-from goals.models import Goals
+from goals.models.goals import Goals
 
 
 class GoalListSerializers(serializers.ModelSerializer):

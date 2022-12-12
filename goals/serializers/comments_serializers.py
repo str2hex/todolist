@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from core.serializers import UserSerializer
-from goals.models import GoalComment
+from goals.models.goalscommets import GoalComment
 
 
 class CommentsCreateSerializers(serializers.ModelSerializer):
