@@ -1,6 +1,6 @@
 from django.db import models
 from core.models import User
-
+from goals.models.board import Board
 
 class GoalCategory(models.Model):
     class Meta:
