@@ -2,39 +2,43 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDe
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import LimitOffsetPagination
 
 from goals.models.goalscommets import GoalComment
-from goals.permissions import UserAuthenticated
-from goals.serializers import comments_serializers
+from goals.permissions import CommentPermissions
+from goals.serializers.comments_serializers import CommentsCreateSerializers, CommentsRUDSerializers
 
 
 class GoalCommentsCreateView(CreateAPIView):
     model = GoalComment
-    serializer_class = comments_serializers.CommentsCreateSerializers
-    permission_classes = [IsAuthenticated, UserAuthenticated]
+    serializer_class = CommentsCreateSerializers
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(goal_id=self.request.data['goal'])
 
 
 class GoalCommentsListView(ListAPIView):
     model = GoalComment
-    permission_classes = [IsAuthenticated, UserAuthenticated]
-    serializer_class = comments_serializers.GoalCommentsListSerializers
-    filter_backends = [DjangoFilterBackend,
-                       filters.OrderingFilter,
-                       filters.SearchFilter]
-    filterset_fields = ['goal']
-    ordering = ['created']
+    permission_classes = [IsAuthenticated]
+    serializer_class = CommentsRUDSerializers
+    pagination_class = LimitOffsetPagination
+    filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
+    filterset_fields = ["goal"]
+    ordering = ["-id"]
 
     def get_queryset(self):
-        return GoalComment.objects.filter(user=self.request.user)
+        return GoalComment.objects.filter(
+            goal__category__board__participants__user=self.request.user
+        )
 
 
 class CommentsRUDView(RetrieveUpdateDestroyAPIView):
     queryset = GoalComment.objects.all()
-    serializer_class = comments_serializers.CommentsRUDSerializers
-    permission_classes = [IsAuthenticated, UserAuthenticated]
+    serializer_class = CommentsRUDSerializers
+    permission_classes = [IsAuthenticated, CommentPermissions]
 
-    def perform_update(self, serializer):
-        serializer.save(user=self.request.user)
+    def get_queryset(self):
+        return GoalComment.objects.filter(
+            goal__category__board__participants__user=self.request.user
+        )

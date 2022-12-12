@@ -1,30 +1,55 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework import permissions
 
 from goals.models.board import BoardParticipant
 
 
-class UserAuthenticated(BasePermission):
-    """
-    A base class from which all permission classes should inherit.
-    """
-
-    def has_permission(self, request, view):
-        return True
-
-    def has_object_permission(self, request, view, obj):
-        if request.user == obj.user:
-            return True
-
-
-class BoardPermissions(BasePermission):
-
+class BoardPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if not request.user.is_authenticated:
             return False
-        if request.method in SAFE_METHODS:
+        if request.method in permissions.SAFE_METHODS:
             return BoardParticipant.objects.filter(
                 user=request.user, board=obj
             ).exists()
         return BoardParticipant.objects.filter(
-            user=request.user, board=obj, role=BoardParticipant.Role.owner
+                user=request.user, board=obj, role=BoardParticipant.Role.owner
+            ).exists()
+
+
+class CategoryPermissions(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if not request.user.is_authenticated:
+            return False
+        if request.method in permissions.SAFE_METHODS:
+            return BoardParticipant.objects.filter(
+                user=request.user, board=obj.board
+            ).exists()
+        return BoardParticipant.objects.filter(
+            user=request.user,
+            board=obj.board,
+            role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
         ).exists()
+
+
+class GoalPermissions(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if not request.user.is_authenticated:
+            return False
+        if request.method in permissions.SAFE_METHODS:
+            return BoardParticipant.objects.filter(
+                user=request.user, board=obj.category.board
+            ).exists()
+        return BoardParticipant.objects.filter(
+            user=request.user,
+            board=obj.category.board,
+            role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
+        ).exists()
+
+
+class CommentPermissions(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if not request.user.is_authenticated:
+            return False
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.user == request.user
