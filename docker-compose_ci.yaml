@@ -47,14 +47,15 @@ services:
       BOT_TOKEN: $BOT_TOKEN
     command: >
       bash -c 'python3 manage.py runbot'
-    migrations:
-      image: str2hex/backend:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-      depends_on:
-        postgres:
-          condition: service_healthy
-      command: >
-        bash -c 'python manage.py migrate'
-      environment:
+
+  migrations_bot:
+    image: str2hex/backend:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      bash -c 'python manage.py migrate'
+    environment:
         DEBUG: $DEBUG
         SECRET_KEY: $SECRET_KEY
         ALLOWED_HOSTS: $ALLOWED_HOSTS
