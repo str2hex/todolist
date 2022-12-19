@@ -23,7 +23,7 @@ class Goals(models.Model):
     id = models.AutoField(primary_key=True)
     title = models.CharField(verbose_name="Название", max_length=255)
     description = models.TextField(verbose_name="Описание", null=True, blank=True)
-    due_date = models.DateField(verbose_name="Дата выполнения")
+    due_date = models.DateField(verbose_name="Дата выполнения", null=True, blank=True)
     user = models.ForeignKey(User, verbose_name="Автор", on_delete=models.CASCADE)
     category = models.ForeignKey(GoalCategory, verbose_name="категория", related_name='goals',
                                  on_delete=models.PROTECT)
