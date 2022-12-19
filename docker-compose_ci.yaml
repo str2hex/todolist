@@ -31,27 +31,37 @@ services:
     command: bash -c "python3 manage.py migrate" # команда для применения миграций
 
   bot:
-    build:
-      context: .
+    image: str2hex/backend:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
       postgres:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
-    env_file:
-      - .env
+    environment:
+      DEBUG: $DEBUG
+      SECRET_KEY: $SECRET_KEY
+      ALLOWED_HOSTS: $ALLOWED_HOSTS
+      SOCIAL_AUTH_VK_OAUTH2_KEY: $SOCIAL_AUTH_VK_OAUTH2_KEY
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: $SOCIAL_AUTH_VK_OAUTH2_SECRET
+      DATABASE_URL: $DATABASE_URL
+      BOT_TOKEN: $BOT_TOKEN
     command: >
       bash -c 'python3 manage.py runbot'
     migrations:
-      build:
-        context: .
+      image: str2hex/backend:$GITHUB_REF_NAME-$GITHUB_RUN_ID
       depends_on:
         postgres:
           condition: service_healthy
-      env_file:
-        - .env
       command: >
-        bash -c 'python3 manage.py migrate'
+        bash -c 'python manage.py migrate'
+      environment:
+        DEBUG: $DEBUG
+        SECRET_KEY: $SECRET_KEY
+        ALLOWED_HOSTS: $ALLOWED_HOSTS
+        SOCIAL_AUTH_VK_OAUTH2_KEY: $SOCIAL_AUTH_VK_OAUTH2_KEY
+        SOCIAL_AUTH_VK_OAUTH2_SECRET: $SOCIAL_AUTH_VK_OAUTH2_SECRET
+        DATABASE_URL: $DATABASE_URL
+        BOT_TOKEN: $BOT_TOKEN
 
   postgres:
     image: postgres:12.4-alpine  # образ
