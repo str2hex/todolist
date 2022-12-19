@@ -30,6 +30,29 @@ services:
       - ./.env:/web/www/.env
     command: bash -c "python3 manage.py migrate" # команда для применения миграций
 
+  bot:
+    build:
+      context: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+    command: >
+      bash -c 'python3 manage.py runbot'
+    migrations:
+      build:
+        context: .
+      depends_on:
+        postgres:
+          condition: service_healthy
+      env_file:
+        - .env
+      command: >
+        bash -c 'python3 manage.py migrate'
+
   postgres:
     image: postgres:12.4-alpine  # образ
     volumes: # волюм для данных БД

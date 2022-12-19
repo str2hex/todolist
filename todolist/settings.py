@@ -169,6 +169,12 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS' : ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
+
+#SETTING BOT TOKEN
+BOT_TOKEN = env('BOT_TOKEN')
+
+
+
 # LOGGING = {
 #     'version': 1,
 #     'filters': {
