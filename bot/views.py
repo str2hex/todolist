@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.contrib.sites import requests
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -10,13 +10,14 @@ from goals.models import BoardParticipant, Board
 from todolist import settings
 
 
-# Create your views here.
 class VerificationView(GenericAPIView):
+    """Верификация бота API"""
     model = TgUser
     permission_classes = [IsAuthenticated]
     serializer_class = TgUserSerializer
 
-    def patch(self, request, *args, **kwargs):
+    def patch(self, request: requests, *args: str, **kwargs: int) -> Response:
+        """Добавление пользователя в телеграмм бота"""
         serializer: TgUserSerializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 

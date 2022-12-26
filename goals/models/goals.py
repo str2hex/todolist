@@ -4,6 +4,7 @@ from goals.models.goalcategory import GoalCategory
 
 
 class Goals(models.Model):
+    """Модель целей пользователя"""
     class Status(models.IntegerChoices):
         to_do = 1, "К выполнению"
         in_progress = 2, "В процессе"

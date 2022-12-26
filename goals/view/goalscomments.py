@@ -15,7 +15,7 @@ class GoalCommentsCreateView(CreateAPIView):
     serializer_class = CommentsCreateSerializers
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer) -> None:
+    def perform_create(self, serializer: CommentsCreateSerializers) -> None:
         """Передаём в serializers новую переменную goal_id"""
         serializer.save(goal_id=self.request.data['goal'])
 

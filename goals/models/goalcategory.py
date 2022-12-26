@@ -3,6 +3,7 @@ from core.models import User
 from goals.models.board import Board
 
 class GoalCategory(models.Model):
+    """Модель категорий пользователя"""
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"

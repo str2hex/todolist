@@ -11,6 +11,7 @@ USER_MODEL = get_user_model()
 
 
 class CreateUserSerializers(serializers.ModelSerializer):
+    """Serializers создания пользователя"""
     password = serializers.CharField(write_only=True)
     password_repeat = serializers.CharField(write_only=True)
 
@@ -18,7 +19,8 @@ class CreateUserSerializers(serializers.ModelSerializer):
         model = USER_MODEL
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 'password_repeat']
 
-    def validate(self, attrs):
+    def validate(self, attrs) -> dict:
+        """Валидация паролей"""
         password = attrs.get('password')
         password_repeat = attrs.pop('password_repeat')
 
@@ -32,7 +34,8 @@ class CreateUserSerializers(serializers.ModelSerializer):
 
         return attrs
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> USER_MODEL:
+        """После успешной валидации создаём пользователя"""
         password = validated_data.get('password')
         validated_data['password'] = make_password(password)
         instance = super().create(validated_data)
@@ -40,10 +43,12 @@ class CreateUserSerializers(serializers.ModelSerializer):
 
 
 class LoginUserSerializers(serializers.ModelSerializer):
+    """Serializers входа пользователя на аккаунт - login"""
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> USER_MODEL:
+        """Вход пользователя проверка аутентификации """
         user = authenticate(
             username=validated_data['username'],
             password=validated_data['password'],
@@ -65,11 +70,13 @@ class ProfilesSerializers(serializers.ModelSerializer):
 
 
 class UpdatePasswordUserSerializers(serializers.Serializer):
+    """Serializers смены пароля пользователя"""
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     old_password = serializers.CharField(required=True, write_only=True)
     new_password = serializers.CharField(required=True, write_only=True)
 
-    def validate(self, attrs):
+    def validate(self, attrs) -> dict:
+        """Валидация пароля пользователя"""
         password_old = attrs.get('old_password')
 
         user: USER_MODEL = self.instance
@@ -84,12 +91,14 @@ class UpdatePasswordUserSerializers(serializers.Serializer):
         return attrs
 
     def update(self, instance: USER_MODEL, validated_data: dict) -> USER_MODEL:
+        """Обновление пароля в БД"""
         instance.set_password(validated_data['new_password'])
         instance.save(update_fields=['password'])
         return instance
 
 
 class UserSerializer(serializers.Serializer):
+    """Стандартный набор пользователя"""
     id = serializers.IntegerField()
     username = serializers.CharField(max_length=100)
     first_name = serializers.CharField(max_length=100)
@@ -98,6 +107,7 @@ class UserSerializer(serializers.Serializer):
 
 
 class RetrieveUserSerializer(serializers.ModelSerializer):
+    """Обновление данных пользователя"""
     id = serializers.IntegerField(read_only=True)
     username = serializers.CharField(
         validators=[

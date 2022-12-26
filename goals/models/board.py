@@ -3,6 +3,7 @@ from core.models import User
 
 
 class Board(models.Model):
+    """Модель Доски"""
     class Meta:
         verbose_name = "Доска"
         verbose_name_plural = "Доски"
@@ -14,6 +15,7 @@ class Board(models.Model):
 
 
 class BoardParticipant(models.Model):
+    """Модель пользователей доски"""
     class Meta:
         unique_together = ("board", "user")
         verbose_name = "Участник"

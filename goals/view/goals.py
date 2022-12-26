@@ -33,7 +33,7 @@ class GoalListView(ListAPIView):
     ordering = ["priority", "due_date"]
     search_fields = ["title"]
 
-    def get_queryset(self):
+    def get_queryset(self) -> Goals:
         """Запрос в БД выводим доступные цели пользователя"""
         return Goals.objects.filter(category__board__participants__user=self.request.user).exclude(
             status=Goals.Status.archived)

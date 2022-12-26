@@ -6,6 +6,7 @@ from goals.models.goals import Goals
 
 
 class GoalDateFilter(rest_framework.FilterSet):
+    """Класс фильтра для категорий пользователя"""
     class Meta:
         model = Goals
         fields = {

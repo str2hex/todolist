@@ -4,6 +4,7 @@ from goals.models.goals import Goals
 
 
 class GoalComment(models.Model):
+    """Модель комментариев пользователя"""
     class Meta:
         verbose_name = "Комментарий"
         verbose_name_plural = "Комментарии"

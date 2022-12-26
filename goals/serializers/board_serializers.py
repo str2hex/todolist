@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from django.db import transaction
 
-
 from core.models import User
 from goals.models.board import Board, BoardParticipant
 
 
 class BoardCreateSerializer(serializers.ModelSerializer):
+    """Создание доски пользователя"""
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -14,7 +14,7 @@ class BoardCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created", "updated")
         fields = "__all__"
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> Board:
         user = validated_data.pop("user")
         board = Board.objects.create(**validated_data)
         BoardParticipant.objects.create(
@@ -24,6 +24,7 @@ class BoardCreateSerializer(serializers.ModelSerializer):
 
 
 class BoardParticipantSerializer(serializers.ModelSerializer):
+    """Создание привязки доски к пользователю"""
     role = serializers.ChoiceField(
         required=True, choices=BoardParticipant.Role.choices
     )
@@ -38,6 +39,7 @@ class BoardParticipantSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    """Обновление доски пользователя"""
     participants = BoardParticipantSerializer(many=True)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -75,7 +77,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class BoardListSerializer(serializers.ModelSerializer):
+    """Вывод всех досок пользователя"""
     class Meta:
         model = Board
         fields = "__all__"
-

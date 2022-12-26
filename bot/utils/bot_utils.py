@@ -5,12 +5,14 @@ from goals.models import Goals, GoalCategory, Board, BoardParticipant
 
 
 class BotGoal:
+    """Телеграмм бот"""
     def __init__(self, tg_user: TgUser, msg: Message, tg_client: TgClient):
         self.tg_user = tg_user
         self.msg = msg
         self.tg_client = tg_client
 
-    def get_goal(self):
+    def get_goal(self) -> None:
+        """Выводим список целей"""
         goals = Goals.objects.filter(user=self.tg_user.user, category__is_deleted=False)
         if goals.count() > 0:
             for goal in goals:
@@ -24,7 +26,8 @@ class BotGoal:
                          f'Категория: {goal.category.title}'
                 )
 
-    def check_user(self):
+    def check_user(self) -> None:
+        """Проверка пользователя"""
         self.tg_user.set_verification_code()
         self.tg_user.save(update_fields=['verification_code'])
         self.tg_client.send_message(
@@ -33,7 +36,8 @@ class BotGoal:
                                            f'{self.tg_user.verification_code} на сайте: pyhelp.ru'
         )
 
-    def create_goal(self):
+    def create_goal(self)-> None:
+        """Создание целей, категорий и т.д"""
         line_break = '\n'
         categories = GoalCategory.objects.filter(user=self.tg_user.user)
         if '/create' == self.msg.text and categories.count() > 0:

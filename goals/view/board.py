@@ -4,6 +4,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters
 from django.db import transaction
 
+
 from ..models.board import Board
 from ..models.goals import Goals
 from ..permissions import BoardPermissions

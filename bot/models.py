@@ -6,8 +6,8 @@ from django.db import models
 from core.models import User
 
 
-# Create your models here.
 class TgUser(models.Model):
+    """Модель пользователя телеграмм бота"""
     tg_chat_id = models.BigIntegerField(verbose_name='TG CHAT_ID')
     tg_user_id = models.BigIntegerField(unique=True, verbose_name='TG USER_ID')
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT, default=None)
@@ -21,6 +21,7 @@ class TgUser(models.Model):
     )
 
     def set_verification_code(self) -> None:
+        """Генерирумем код верификации"""
         length = 14  # Длина кода подтверждения
         strings = string.hexdigits
         v_code = ''.join(random.sample(strings, length))

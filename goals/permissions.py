@@ -1,10 +1,14 @@
-from rest_framework import permissions
+from typing import Any
 
-from goals.models.board import BoardParticipant
+from rest_framework import permissions
+from django.contrib.sites import requests
+
+from goals.models import GoalCategory, Goals, GoalComment
+from goals.models.board import BoardParticipant, Board
 
 
 class BoardPermissions(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj) -> bool:
+    def has_object_permission(self, request: requests, view: Any, obj: Board) -> bool:
         """Проверка прав пользователя"""
 
         if not request.user.is_authenticated:
@@ -14,11 +18,12 @@ class BoardPermissions(permissions.BasePermission):
                 user=request.user, board=obj
             ).exists()
         return BoardParticipant.objects.filter(
-                user=request.user, board=obj, role=BoardParticipant.Role.owner
-            ).exists()
+            user=request.user, board=obj, role=BoardParticipant.Role.owner
+        ).exists()
+
 
 class CategoryPermissions(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj) -> bool:
+    def has_object_permission(self, request: requests, view: Any, obj: GoalCategory) -> bool:
         """Проверка прав пользователя"""
         if not request.user.is_authenticated:
             return False
@@ -34,7 +39,7 @@ class CategoryPermissions(permissions.BasePermission):
 
 
 class GoalPermissions(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj) -> bool:
+    def has_object_permission(self, request: requests, view: Any, obj: Goals) -> bool:
         """Проверка прав пользователя"""
         if not request.user.is_authenticated:
             return False
@@ -50,7 +55,7 @@ class GoalPermissions(permissions.BasePermission):
 
 
 class CommentPermissions(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj) -> bool:
+    def has_object_permission(self, request: requests, view: Any, obj: GoalComment) -> bool:
         """Проверка прав пользователя"""
         if not request.user.is_authenticated:
             return False
