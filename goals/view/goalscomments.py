@@ -10,15 +10,18 @@ from goals.serializers.comments_serializers import CommentsCreateSerializers, Co
 
 
 class GoalCommentsCreateView(CreateAPIView):
+    """Создание комментария к цели пользователя"""
     model = GoalComment
     serializer_class = CommentsCreateSerializers
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer) -> None:
+        """Передаём в serializers новую переменную goal_id"""
         serializer.save(goal_id=self.request.data['goal'])
 
 
 class GoalCommentsListView(ListAPIView):
+    """Выводим список комментариев с фильтрами по целям"""
     model = GoalComment
     permission_classes = [IsAuthenticated]
     serializer_class = CommentsRUDSerializers
@@ -27,18 +30,21 @@ class GoalCommentsListView(ListAPIView):
     filterset_fields = ["goal"]
     ordering = ["-id"]
 
-    def get_queryset(self):
+    def get_queryset(self) -> None:
+        """Запрос в БД, комментарии для выбранной цели"""
         return GoalComment.objects.filter(
             goal__category__board__participants__user=self.request.user
         )
 
 
 class CommentsRUDView(RetrieveUpdateDestroyAPIView):
+    """Внесение изменений в комментарии пользователя, обновление, удаление, просмотр"""
     queryset = GoalComment.objects.all()
     serializer_class = CommentsRUDSerializers
     permission_classes = [IsAuthenticated, CommentPermissions]
 
-    def get_queryset(self):
+    def get_queryset(self) -> GoalComment:
+        """Запрос в БД, проверяем возможность внесения изменений"""
         return GoalComment.objects.filter(
             goal__category__board__participants__user=self.request.user
         )

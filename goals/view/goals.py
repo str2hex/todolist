@@ -11,12 +11,14 @@ from ..serializers.goals_serializers import GoalCreateSerializer, GoalListSerial
 
 
 class GoalCreateView(CreateAPIView):
+    """Создание цели"""
     model = Goals
     permission_classes = [IsAuthenticated]
     serializer_class = GoalCreateSerializer
 
 
 class GoalListView(ListAPIView):
+    """Вывод списка целей с фильтрами"""
     model = Goals
     permission_classes = [IsAuthenticated]
     serializer_class = GoalListSerializers
@@ -32,16 +34,19 @@ class GoalListView(ListAPIView):
     search_fields = ["title"]
 
     def get_queryset(self):
+        """Запрос в БД выводим доступные цели пользователя"""
         return Goals.objects.filter(category__board__participants__user=self.request.user).exclude(
             status=Goals.Status.archived)
 
 
 class GoalRUDlView(RetrieveUpdateDestroyAPIView):
+    """Внесение изменений в цели пользователя, обновление, удаление, просмотр"""
     queryset = Goals.objects.all()
     serializer_class = GoalsRUDSerializers
     permission_classes = [IsAuthenticated, GoalPermissions]
 
-    def perform_destroy(self, instance):
+    def perform_destroy(self, instance: Goals) -> Goals:
+        """При удалении не чистим БД, присваиваем статус АРХИВ"""
         instance.status = Goals.Status.archived
         instance.save()
         return instance

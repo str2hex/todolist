@@ -46,7 +46,7 @@ class BoardSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ("id", "created", "updated")
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Board, validated_data: dict) -> Board:
         owner = validated_data.pop("user")
         new_participants = validated_data.pop("participants")
         new_by_id = {part["user"].id: part for part in new_participants}
@@ -57,10 +57,7 @@ class BoardSerializer(serializers.ModelSerializer):
                 if old_participant.user_id not in new_by_id:
                     old_participant.delete()
                 else:
-                    if (
-                            old_participant.role
-                            != new_by_id[old_participant.user_id]["role"]
-                    ):
+                    if old_participant.role != new_by_id[old_participant.user_id]["role"]:
                         old_participant.role = new_by_id[old_participant.user_id][
                             "role"
                         ]

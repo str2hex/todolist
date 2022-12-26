@@ -4,7 +4,9 @@ from goals.models.board import BoardParticipant
 
 
 class BoardPermissions(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
+    def has_object_permission(self, request, view, obj) -> bool:
+        """Проверка прав пользователя"""
+
         if not request.user.is_authenticated:
             return False
         if request.method in permissions.SAFE_METHODS:
@@ -15,9 +17,9 @@ class BoardPermissions(permissions.BasePermission):
                 user=request.user, board=obj, role=BoardParticipant.Role.owner
             ).exists()
 
-
 class CategoryPermissions(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
+    def has_object_permission(self, request, view, obj) -> bool:
+        """Проверка прав пользователя"""
         if not request.user.is_authenticated:
             return False
         if request.method in permissions.SAFE_METHODS:
@@ -32,7 +34,8 @@ class CategoryPermissions(permissions.BasePermission):
 
 
 class GoalPermissions(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
+    def has_object_permission(self, request, view, obj) -> bool:
+        """Проверка прав пользователя"""
         if not request.user.is_authenticated:
             return False
         if request.method in permissions.SAFE_METHODS:
@@ -47,7 +50,8 @@ class GoalPermissions(permissions.BasePermission):
 
 
 class CommentPermissions(permissions.BasePermission):
-    def has_object_permission(self, request, view, obj):
+    def has_object_permission(self, request, view, obj) -> bool:
+        """Проверка прав пользователя"""
         if not request.user.is_authenticated:
             return False
         if request.method in permissions.SAFE_METHODS:
