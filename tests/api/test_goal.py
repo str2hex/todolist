@@ -9,7 +9,7 @@ def test_create(auth_user, category):
         "category": category.pk,
         "title": "Title new goal",
         "description": "New Description",
-        "due_date": "2022-12-26",
+        "due_date": "2024-12-26",
         "status": 1,
         "priority": 1
     }
@@ -23,7 +23,7 @@ def test_create(auth_user, category):
         "updated": response.data.get('updated'),
         "title": "Title new goal",
         "description": "New Description",
-        "due_date": "2022-12-26",
+        "due_date": "2024-12-26",
         "status": 1,
         "priority": 1
     }
