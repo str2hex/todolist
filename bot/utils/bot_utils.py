@@ -6,6 +6,7 @@ from goals.models import Goals, GoalCategory, Board, BoardParticipant
 
 class BotGoal:
     """Телеграмм бот"""
+
     def __init__(self, tg_user: TgUser, msg: Message, tg_client: TgClient):
         self.tg_user = tg_user
         self.msg = msg
@@ -36,7 +37,7 @@ class BotGoal:
                                            f'{self.tg_user.verification_code} на сайте: pyhelp.ru'
         )
 
-    def create_goal(self)-> None:
+    def create_goal(self) -> None:
         """Создание целей, категорий и т.д"""
         line_break = '\n'
         categories = GoalCategory.objects.filter(user=self.tg_user.user)
@@ -83,10 +84,16 @@ class BotGoal:
 
             self.tg_client.send_message(
                 chat_id=self.msg.chat.id,
-                text=f'Заголовок: {goal.title}\n'
-                     f'Описание: {goal.description if goal.due_date else "Не указано"}\n'
-                     f'Дата выполнения: {goal.due_date if goal.due_date else "Не указана"}\n'
-                     f'Статус: {goal.Status.choices[goal.status - 1][1]}\n'
-                     f'Приоритет: {goal.Priority.choices[goal.priority - 1][1]}\n'
-                     f'Категория: {goal.category.title}'
+                text=f'Заголовок: '
+                     f'{goal.title}\n'
+                     f'Описание: '
+                     f'{goal.description if goal.due_date else "Не указано"}\n'
+                     f'Дата выполнения: '
+                     f'{goal.due_date if goal.due_date else "Не указана"}\n'
+                     f'Статус: '
+                     f'{goal.Status.choices[goal.status - 1][1]}\n'
+                     f'Приоритет: '
+                     f'{goal.Priority.choices[goal.priority - 1][1]}\n'
+                     f'Категория: '
+                     f'{goal.category.title}'
             )

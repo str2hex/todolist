@@ -1,3 +1,4 @@
+import requests as requests
 from django.contrib.auth import get_user_model, login, logout
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, GenericAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
@@ -19,7 +20,7 @@ class LoginUserView(GenericAPIView):
     """Логин пользователя, вход на аккаунт, запись куков"""
     serializer_class = serializers.LoginUserSerializers
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: requests, *args: str, **kwargs: int) -> Response:
         """Получаем от пользователя информацию и сверяем её на валидность"""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -38,7 +39,7 @@ class ProfileUserView(RetrieveUpdateDestroyAPIView):
         """Определяем pk = user.id"""
         return self.request.user
 
-    def delete(self, request, *args, **kwargs) -> Response:
+    def delete(self, request: requests, *args: str, **kwargs: int) -> Response:
         """Выход юзера с аккаунта"""
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)

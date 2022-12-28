@@ -15,14 +15,16 @@ class Command(BaseCommand):
 
     def verified_user(self, tg_user, msg: Message):
         if msg.text == '/goals':
-            BotGoal(tg_user=tg_user, msg=msg, tg_client=self.tg_client).get_goal()
+            BotGoal(tg_user=tg_user, msg=msg,
+                    tg_client=self.tg_client).get_goal()
         elif msg.text == '/start':
             self.tg_client.send_message(
                 chat_id=msg.chat.id,
                 text=f'Вы уже подтвердили свою личность!✅'
             )
         elif 'create' in msg.text:
-            BotGoal(tg_user=tg_user, msg=msg, tg_client=self.tg_client).create_goal()
+            BotGoal(tg_user=tg_user, msg=msg,
+                    tg_client=self.tg_client).create_goal()
         elif msg.text == '/cancel':
             self.tg_client.send_message(
                 chat_id=msg.chat.id,

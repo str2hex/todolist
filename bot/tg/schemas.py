@@ -3,7 +3,7 @@ from typing import List
 
 import marshmallow_dataclass
 from marshmallow_dataclass import dataclass
-from marshmallow import  EXCLUDE
+from marshmallow import EXCLUDE
 
 
 @dataclass
@@ -29,7 +29,6 @@ class MessageChat:
 
     class Meta:
         unknown = EXCLUDE
-
 
 
 @dataclass

@@ -5,10 +5,10 @@ from bot.tg.schemas import GetUpdatesResponse, SendMessageResponse, GET_UPDATES_
 
 class TgClient:
     """Клиент телеграмм бота"""
-    def __init__(self, token):
+    def __init__(self, token: str) -> None:
         self.token = token
 
-    def get_url(self, method: str):
+    def get_url(self, method: str) -> str:
         """Передаём токен и метод"""
         return f"https://api.telegram.org/bot{self.token}/{method}"
 
