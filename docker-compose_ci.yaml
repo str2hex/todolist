@@ -16,18 +16,16 @@ services:
         condition: service_healthy # проверяем что контейнер запустился
       migrations: # наш контйенер с применяемыми миграциями
         condition: service_completed_successfully # проверяем что контейнер успешно запустился и завершил работу
-    ports: # пробарсываем порты
-      - 8000:8000
-    volumes: # указываем папку хранения базы данных
-      - ./.env:/web/www/.env # волюм с конфигурацией.
+    env_file:
+      - .env
 
   migrations:
     image: str2hex/backend:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
       postgres:
         condition: service_healthy
-    volumes: # волюм с конфигурацией
-      - ./.env:/web/www/.env
+    env_file:
+      - .env
     command: bash -c "python3 manage.py migrate" # команда для применения миграций
 
   bot:
@@ -68,8 +66,6 @@ services:
     image: postgres:12.4-alpine  # образ
     volumes: # волюм для данных БД
       - ./postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     environment: # переменные окружения для автоматического создания БД, пользователя и пароля
       POSTGRES_USER: $DB_USER
       POSTGRES_PASSWORD: $DB_PASSWORD
